@@ -1,3 +1,4 @@
+using deVoid.Utils;
 using Gameplay.Core;
 using UnityEngine;
 
@@ -6,10 +7,12 @@ namespace Gameplay.Main
     public class NormalGameScript : IGameScript
     {
         public IGameController GameController { get; private set; }
+        private GameAPI.OnBallHitBottomEdge onBallHitBottomEdge;
 
         public NormalGameScript(IGameController gameController)
         {
             GameController = gameController;
+            onBallHitBottomEdge = Signals.Get<GameAPI.OnBallHitBottomEdge>();
         }
 
         public void OnBallHitBottomEdge(IBall ball)
@@ -25,11 +28,20 @@ namespace Gameplay.Main
 
         public void OnBallHitEdge(IBall ball, Collision2D collision)
         {
+            var edge = collision.gameObject.GetComponent<IScreenEdge>();
+            if (edge.EdgeType == ScreenEdgeType.Bottom)
+            {
+                onBallHitBottomEdge.Dispatch(ball);
+            }
             var currentDirection = ball.CurrentDirection;
-            var normal = collision.contacts[0].normal;
-            Debug.Log($"normal: {normal.x} {normal.y}");
-            var newDirection = Vector2.Reflect(currentDirection, normal);
-            ball.SetCurrentDirection(newDirection.normalized);
+            Vector2 newDirection = new Vector2();
+            foreach (var contact in collision.contacts)
+            {
+                var normal = contact.normal;
+                newDirection += Vector2.Reflect(currentDirection, normal);
+
+            }
+            ball.SetCurrentDirection((newDirection / collision.contactCount).normalized);
         }
 
         public bool IsGameOver()

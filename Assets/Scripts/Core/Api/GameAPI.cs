@@ -9,4 +9,7 @@ public class GameAPI
     public class OnBallHitBottomEdge : ASignal<IBall> { }
     public class OnBallHitDynamicIsland : ASignal<IBall> { }
     public class OnBallHitEdge : ASignal<IBall, Collision2D> { }
+
+    public class OnScoreChange : ASignal<uint, uint> { }
+    public class OnStartPlay : ASignal { }
 }

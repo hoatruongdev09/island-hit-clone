@@ -29,12 +29,12 @@ namespace Gameplay.Main
 
         public void OnFixUpdate(float fixDelta)
         {
-            Move();
+
         }
 
         public void OnUpdate(float delta)
         {
-
+            Move();
         }
 
         public void Move()

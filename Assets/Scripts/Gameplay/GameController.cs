@@ -3,8 +3,8 @@ using Gameplay.Core;
 using System.Collections.Generic;
 using deVoid.Utils;
 using System;
-using static GameAPI;
 using Random = UnityEngine.Random;
+using System.Collections;
 
 namespace Gameplay.Main
 {
@@ -24,10 +24,16 @@ namespace Gameplay.Main
 
         [SerializeField] private SpawnController spawnController;
         [SerializeField] private float startBallForce = 200f;
+
+        private GameAPI.OnScoreChange onScoreChange;
         private void Awake()
         {
             LoadGameScript();
             RegisterListeners();
+        }
+        private void Start()
+        {
+            onScoreChange = Signals.Get<GameAPI.OnScoreChange>();
         }
         private void OnDestroy()
         {
@@ -35,15 +41,27 @@ namespace Gameplay.Main
         }
         private void RegisterListeners()
         {
+            Signals.Get<GameAPI.OnStartPlay>().AddListener(OnStartPlay);
             Signals.Get<GameAPI.OnBallHitBottomEdge>().AddListener(OnBallHitBottomEdge);
             Signals.Get<GameAPI.OnBallHitDynamicIsland>().AddListener(OnBallHitDynamicIsland);
             Signals.Get<GameAPI.OnBallHitEdge>().AddListener(OnBallHitEdge);
         }
         private void RemoveListeners()
         {
+            Signals.Get<GameAPI.OnStartPlay>().RemoveListener(OnStartPlay);
             Signals.Get<GameAPI.OnBallHitBottomEdge>().RemoveListener(OnBallHitBottomEdge);
             Signals.Get<GameAPI.OnBallHitDynamicIsland>().RemoveListener(OnBallHitDynamicIsland);
             Signals.Get<GameAPI.OnBallHitEdge>().RemoveListener(OnBallHitEdge);
+        }
+
+        private void OnStartPlay()
+        {
+            StartCoroutine(DelayToStartGame());
+        }
+        private IEnumerator DelayToStartGame(float time = 1f)
+        {
+            yield return new WaitForSeconds(time);
+            StartGame();
         }
 
         public void AddBall()
@@ -56,7 +74,6 @@ namespace Gameplay.Main
 
         private void Update()
         {
-
             OnUpdate(Time.deltaTime);
         }
         private void FixedUpdate()
@@ -100,6 +117,7 @@ namespace Gameplay.Main
 
         public void SetScore(uint newScore)
         {
+            onScoreChange.Dispatch(Score, newScore);
             Score = newScore;
         }
 
