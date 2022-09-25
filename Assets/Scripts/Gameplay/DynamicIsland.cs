@@ -1,18 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Gameplay.Core;
+using deVoid.Utils;
 
-public class DynamicIsland : MonoBehaviour
+namespace Gameplay.Main
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public class DynamicIsland : MonoBehaviour, IDynamicIsland
     {
-        
+
+        private void Awake()
+        {
+            Signals.Get<GameAPI.OnBallHitDynamicIsland>().AddListener(OnHitWithBall);
+        }
+        private void OnDestroy()
+        {
+            Signals.Get<GameAPI.OnBallHitDynamicIsland>().RemoveListener(OnHitWithBall);
+        }
+        private void OnHitWithBall(IBall ball)
+        {
+            DoAnimationHit();
+        }
+        public void DoAnimationHit()
+        {
+            Debug.Log("Do animation hit");
+        }
+
     }
 }

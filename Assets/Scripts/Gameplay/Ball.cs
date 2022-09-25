@@ -2,35 +2,80 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Gameplay.Core;
+using deVoid.Utils;
 
 namespace Gameplay.Main
 {
     public class Ball : MonoBehaviour, IBall
     {
-        public float CurrentForce => throw new System.NotImplementedException();
+        public bool IsDead { get; private set; }
+        [field: SerializeField] public float CurrentForce { get; private set; }
 
-        public Vector2 CurrentDirection => throw new System.NotImplementedException();
+        [field: SerializeField] public Vector2 CurrentDirection { get; private set; }
 
-        public IColliderDetector ColliderDetector => throw new System.NotImplementedException();
+        public IColliderDetector ColliderDetector => colliderDetector;
 
-        public void FixUpdate(float fixDelta)
+
+        [SerializeField] private ColliderDetector colliderDetector;
+        [SerializeField] private Rigidbody2D rigidbody;
+        private GameAPI.OnBallHitDynamicIsland onBallHitDynamicIsland;
+        private GameAPI.OnBallHitEdge onBallHitEdge;
+
+        private void Start()
         {
-            throw new System.NotImplementedException();
+            onBallHitDynamicIsland = Signals.Get<GameAPI.OnBallHitDynamicIsland>();
+            onBallHitEdge = Signals.Get<GameAPI.OnBallHitEdge>();
+        }
+
+        public void OnFixUpdate(float fixDelta)
+        {
+            Move();
         }
 
         public void OnUpdate(float delta)
         {
-            throw new System.NotImplementedException();
+
         }
 
+        public void Move()
+        {
+            // rigidbody.AddForce(CurrentDirection * CurrentForce, ForceMode2D.Impulse);
+            rigidbody.velocity = (CurrentDirection * CurrentForce);
+        }
         public void SetCurrentDirection(Vector2 newDirection)
         {
-            throw new System.NotImplementedException();
+            CurrentDirection = newDirection;
         }
 
         public void SetCurrentForce(float amount)
         {
-            throw new System.NotImplementedException();
+            CurrentForce = amount;
+        }
+
+        public void OnCollisionWith(Collision2D other)
+        {
+            if (other.gameObject.CompareTag("DynamicIsland"))
+            {
+                onBallHitDynamicIsland.Dispatch(this);
+                onBallHitEdge.Dispatch(this, other);
+            }
+            else if (other.gameObject.CompareTag("ScreenEdge"))
+            {
+                onBallHitEdge.Dispatch(this, other);
+            }
+            else if (other.gameObject.CompareTag("HandleBar"))
+            {
+                onBallHitEdge.Dispatch(this, other);
+            }
+            else
+            {
+                Debug.Log($"No case for tag {other.gameObject.tag}");
+            }
+        }
+
+        public void SetDead()
+        {
+            IsDead = true;
         }
 
     }
