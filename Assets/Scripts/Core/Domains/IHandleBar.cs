@@ -5,6 +5,6 @@ namespace Gameplay.Core
         float CurrentSpeed { get; }
         void SetSpeed(float newSpeed);
         void Move(float direction);
-
+        float GetHorizontalForce();
     }
 }

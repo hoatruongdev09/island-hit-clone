@@ -27,5 +27,10 @@ namespace Gameplay.Main
         {
             CurrentSpeed = newSpeed;
         }
+
+        public float GetHorizontalForce()
+        {
+            return horizontal;
+        }
     }
 }

@@ -22,8 +22,13 @@ namespace Gameplay.Main
 
         public IGameScript GameScript { get; private set; }
 
+        public IBackgroundController BackgroundController => backgroundController;
+
         [SerializeField] private SpawnController spawnController;
-        [SerializeField] private float startBallForce = 200f;
+        [SerializeField] private BackgroundController backgroundController;
+        [SerializeField] private float startBallForce = 4;
+        [SerializeField] private uint scoreStep = 5;
+        [SerializeField] private float forcePerStep = 2;
 
         private GameAPI.OnScoreChange onScoreChange;
         private void Awake()
@@ -42,6 +47,7 @@ namespace Gameplay.Main
         private void RegisterListeners()
         {
             Signals.Get<GameAPI.OnStartPlay>().AddListener(OnStartPlay);
+            Signals.Get<GameAPI.OnReplay>().AddListener(OnReplay);
             Signals.Get<GameAPI.OnBallHitBottomEdge>().AddListener(OnBallHitBottomEdge);
             Signals.Get<GameAPI.OnBallHitDynamicIsland>().AddListener(OnBallHitDynamicIsland);
             Signals.Get<GameAPI.OnBallHitEdge>().AddListener(OnBallHitEdge);
@@ -49,9 +55,15 @@ namespace Gameplay.Main
         private void RemoveListeners()
         {
             Signals.Get<GameAPI.OnStartPlay>().RemoveListener(OnStartPlay);
+            Signals.Get<GameAPI.OnReplay>().RemoveListener(OnReplay);
             Signals.Get<GameAPI.OnBallHitBottomEdge>().RemoveListener(OnBallHitBottomEdge);
             Signals.Get<GameAPI.OnBallHitDynamicIsland>().RemoveListener(OnBallHitDynamicIsland);
             Signals.Get<GameAPI.OnBallHitEdge>().RemoveListener(OnBallHitEdge);
+        }
+
+        private void OnReplay()
+        {
+            StartCoroutine(DelayToStartGame());
         }
 
         private void OnStartPlay()
@@ -125,8 +137,7 @@ namespace Gameplay.Main
         {
             if (GameStarted) { return; }
             GameStarted = true;
-            SetScore(0);
-            SetBallsForce(startBallForce);
+            ResetGame();
             AddBall();
         }
 
@@ -134,6 +145,20 @@ namespace Gameplay.Main
         {
             if (!GameStarted) { return; }
             GameStarted = false;
+            AccountData.lastGameScore = Score;
+            if (AccountData.lastGameScore > AccountData.bestGameScore)
+            {
+                AccountData.isBestScore = true;
+                AccountData.bestGameScore = Score;
+            }
+            else
+            {
+                AccountData.isBestScore = false;
+            }
+            DG.Tweening.DOVirtual.DelayedCall(1, () =>
+            {
+                Signals.Get<GameAPI.OnGameEnd>().Dispatch();
+            });
         }
         public Vector2 RandomDirection()
         {
@@ -155,6 +180,24 @@ namespace Gameplay.Main
         public void LoadGameScript()
         {
             GameScript = new NormalGameScript(this);
+        }
+
+        public uint GetScoreStep()
+        {
+            return scoreStep;
+        }
+
+        public float GetForceIncreasePerStep()
+        {
+            return forcePerStep;
+        }
+
+        public void ResetGame()
+        {
+            SetScore(0);
+            BackgroundController.ResetToDefaultColor();
+            SetBallsForce(startBallForce);
+            AliveBalls.Clear();
         }
     }
 }

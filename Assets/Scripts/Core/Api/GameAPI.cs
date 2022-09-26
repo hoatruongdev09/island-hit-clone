@@ -12,4 +12,6 @@ public class GameAPI
 
     public class OnScoreChange : ASignal<uint, uint> { }
     public class OnStartPlay : ASignal { }
+    public class OnReplay : ASignal { }
+    public class OnGameEnd : ASignal { }
 }

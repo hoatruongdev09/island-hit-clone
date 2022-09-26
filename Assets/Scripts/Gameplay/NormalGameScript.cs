@@ -24,6 +24,12 @@ namespace Gameplay.Main
         public void OnBallHitDynamicIsland(IBall ball)
         {
             GameController.SetScore(GameController.Score + 1);
+            if (GameController.Score != 0 && GameController.Score % GameController.GetScoreStep() == 0)
+            {
+                GameController.SetBallsForce(GameController.CurrentBallsForce + GameController.GetForceIncreasePerStep());
+                GameController.AddBall();
+                GameController.BackgroundController.ChangeColorByLevel((uint)(GameController.Score / GameController.GetForceIncreasePerStep()));
+            }
         }
 
         public void OnBallHitEdge(IBall ball, Collision2D collision)
@@ -34,6 +40,12 @@ namespace Gameplay.Main
                 onBallHitBottomEdge.Dispatch(ball);
                 return;
             }
+            var handleBar = collision.gameObject.GetComponent<IHandleBar>();
+            float bonusDirect = 0;
+            if (handleBar != null)
+            {
+                bonusDirect = handleBar.GetHorizontalForce();
+            }
             var currentDirection = ball.CurrentDirection;
             Vector2 newDirection = new Vector2();
             foreach (var contact in collision.contacts)
@@ -42,7 +54,7 @@ namespace Gameplay.Main
                 newDirection += Vector2.Reflect(currentDirection, normal);
 
             }
-            ball.SetCurrentDirection((newDirection / collision.contactCount).normalized);
+            ball.SetCurrentDirection((newDirection / collision.contactCount + new Vector2(bonusDirect, 0)).normalized);
         }
 
         public bool IsGameOver()
