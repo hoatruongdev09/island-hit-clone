@@ -29,9 +29,10 @@ namespace Gameplay.Main
         public void OnBallHitEdge(IBall ball, Collision2D collision)
         {
             var edge = collision.gameObject.GetComponent<IScreenEdge>();
-            if (edge.EdgeType == ScreenEdgeType.Bottom)
+            if (edge != null && edge.EdgeType == ScreenEdgeType.Bottom)
             {
                 onBallHitBottomEdge.Dispatch(ball);
+                return;
             }
             var currentDirection = ball.CurrentDirection;
             Vector2 newDirection = new Vector2();

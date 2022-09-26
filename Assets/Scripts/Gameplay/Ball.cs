@@ -54,6 +54,7 @@ namespace Gameplay.Main
 
         public void OnCollisionWith(Collision2D other)
         {
+            if (IsDead) { return; }
             if (other.gameObject.CompareTag("DynamicIsland"))
             {
                 onBallHitDynamicIsland.Dispatch(this);
@@ -76,6 +77,7 @@ namespace Gameplay.Main
         public void SetDead()
         {
             IsDead = true;
+            Destroy(gameObject, 3f);
         }
 
     }

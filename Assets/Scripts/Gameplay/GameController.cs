@@ -67,7 +67,7 @@ namespace Gameplay.Main
         public void AddBall()
         {
             var ball = SpawnController.CreateBall();
-            ball.SetCurrentDirection(RandomDirection());
+            ball.SetCurrentDirection(RandomDirection().normalized);
             ball.SetCurrentForce(CurrentBallsForce);
             AliveBalls.Add(ball);
         }
