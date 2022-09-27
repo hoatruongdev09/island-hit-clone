@@ -39,6 +39,7 @@ namespace Gameplay.Main
         private GameAPI.OnScoreChange onScoreChange;
         private void Awake()
         {
+            Application.targetFrameRate = 60;
             LoadGameScript();
             RegisterListeners();
         }
