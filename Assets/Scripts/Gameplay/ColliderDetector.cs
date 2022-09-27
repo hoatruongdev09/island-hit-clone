@@ -20,5 +20,6 @@ namespace Gameplay.Main
             if (!acceptedTag.Contains(other.gameObject.tag)) { return; }
             OnCollision?.Invoke(other);
         }
+
     }
 }

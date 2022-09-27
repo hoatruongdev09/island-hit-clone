@@ -26,14 +26,25 @@ namespace Gameplay.Main
             GameController.SetScore(GameController.Score + 1);
             if (GameController.Score != 0 && GameController.Score % GameController.GetScoreStep() == 0)
             {
-                GameController.SetBallsForce(GameController.CurrentBallsForce + GameController.GetForceIncreasePerStep());
-                GameController.AddBall();
+                if (GameController.CurrentBallsForce >= GameController.MaxBallForce)
+                {
+                    GameController.SetBallsForce(GameController.MaxBallForce);
+                }
+                else
+                {
+                    GameController.SetBallsForce(GameController.CurrentBallsForce + GameController.GetForceIncreasePerStep());
+                }
+                if (GameController.AliveBalls.Count < GameController.MaxBallInTime)
+                {
+                    GameController.AddBall();
+                }
                 GameController.BackgroundController.ChangeColorByLevel((uint)(GameController.Score / GameController.GetForceIncreasePerStep()));
             }
         }
 
         public void OnBallHitEdge(IBall ball, Collision2D collision)
         {
+            if (collision.gameObject.CompareTag("Ball")) { return; }
             var edge = collision.gameObject.GetComponent<IScreenEdge>();
             if (edge != null && edge.EdgeType == ScreenEdgeType.Bottom)
             {

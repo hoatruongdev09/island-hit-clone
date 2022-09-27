@@ -10,6 +10,8 @@ namespace Gameplay.Core
         ISpawnController SpawnController { get; }
         IGameScript GameScript { get; }
         uint Score { get; }
+        uint MaxBallInTime { get; }
+        float MaxBallForce { get; }
         bool GameStarted { get; }
         float CurrentBallsForce { get; }
 

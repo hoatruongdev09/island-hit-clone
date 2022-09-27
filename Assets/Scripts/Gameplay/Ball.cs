@@ -29,17 +29,15 @@ namespace Gameplay.Main
 
         public void OnFixUpdate(float fixDelta)
         {
-
+            Move();
         }
 
         public void OnUpdate(float delta)
         {
-            Move();
         }
 
         public void Move()
         {
-            // rigidbody.AddForce(CurrentDirection * CurrentForce, ForceMode2D.Impulse);
             rigidbody.velocity = (CurrentDirection * CurrentForce);
         }
         public void SetCurrentDirection(Vector2 newDirection)
@@ -78,6 +76,12 @@ namespace Gameplay.Main
         {
             IsDead = true;
             Destroy(gameObject, 3f);
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.black;
+            Gizmos.DrawRay(transform.position, CurrentDirection * 10);
         }
 
     }

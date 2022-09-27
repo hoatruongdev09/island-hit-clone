@@ -24,8 +24,14 @@ namespace Gameplay.Main
 
         public IBackgroundController BackgroundController => backgroundController;
 
+        public uint MaxBallInTime => maxBallInTime;
+
+        public float MaxBallForce => maxForce;
+
         [SerializeField] private SpawnController spawnController;
         [SerializeField] private BackgroundController backgroundController;
+        [SerializeField] private uint maxBallInTime = 5;
+        [SerializeField] private float maxForce = 8;
         [SerializeField] private float startBallForce = 4;
         [SerializeField] private uint scoreStep = 5;
         [SerializeField] private float forcePerStep = 2;
