@@ -63,6 +63,17 @@ namespace Gameplay.Main
             if (other.gameObject.CompareTag("DynamicIsland"))
             {
                 onBallHitDynamicIsland.Dispatch(this);
+            }
+            else
+            {
+                Debug.Log($"No case for tag {other.gameObject.tag}");
+            }
+        }
+        public void OnCollisionStayWith(Collision2D other)
+        {
+            if (IsDead) { return; }
+            if (other.gameObject.CompareTag("DynamicIsland"))
+            {
                 onBallHitEdge.Dispatch(this, other);
             }
             else if (other.gameObject.CompareTag("ScreenEdge"))

@@ -143,6 +143,21 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  onCollisionStay:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1982780486697036142}
+        m_TargetAssemblyTypeName: Gameplay.Main.Ball, Assembly-CSharp
+        m_MethodName: OnCollisionStayWith
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!58 &1982780486697036133
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -241,7 +241,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -25}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &91489699
@@ -2504,6 +2504,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnController: {fileID: 37753808}
   backgroundController: {fileID: 1382148513}
+  maxBallInTime: 5
+  maxForce: 8
   startBallForce: 4
   scoreStep: 5
   forcePerStep: 1

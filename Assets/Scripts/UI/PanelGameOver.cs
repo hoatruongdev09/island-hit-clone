@@ -44,10 +44,10 @@ public class PanelGameOver : BasePanel
         base.Show(() =>
         {
             AnimateDynamicIsland(0.6f);
-            AnimateButtonReplay(0.3f, 0.6f);
-            AnimateButtonPlayGround(0.3f, 1.5f);
-            AnimateButtonShare(0.3f, 1.2f);
-            AnimateButtonMenu(0.3f, 1.5f);
+            AnimateButtonReplay(0.3f, 0.3f);
+            AnimateButtonReplayGround(0.3f, 1.5f);
+            AnimateButtonShare(0.3f, 0.6f);
+            AnimateButtonMenu(0.3f, 0.9f);
             callback?.Invoke();
         });
         textNewHighScore.gameObject.SetActive(AccountData.isBestScore);
@@ -102,7 +102,7 @@ public class PanelGameOver : BasePanel
     {
         (buttonMenu.transform as RectTransform).DOAnchorPosX(0, time).SetDelay(delay);
     }
-    private void AnimateButtonPlayGround(float time = .3f, float delay = .6f)
+    private void AnimateButtonReplayGround(float time = .3f, float delay = .6f)
     {
         buttonPlayBackgroundHolder.DOScale(Vector3.one, time).SetDelay(delay).SetEase(Ease.OutBack);
     }
