@@ -15,6 +15,7 @@ namespace Gameplay.Main
 
         public IColliderDetector ColliderDetector => colliderDetector;
 
+        public Vector3 Position => transform.position;
 
         [SerializeField] private ColliderDetector colliderDetector;
         [SerializeField] private Rigidbody2D rigidbody;
@@ -29,6 +30,7 @@ namespace Gameplay.Main
 
         public void OnFixUpdate(float fixDelta)
         {
+            if (IsDead) { return; }
             Move();
         }
 
@@ -39,6 +41,11 @@ namespace Gameplay.Main
         public void Move()
         {
             rigidbody.velocity = (CurrentDirection * CurrentForce);
+        }
+
+        public void ForceBall(Vector2 force)
+        {
+            rigidbody.AddForce(force, ForceMode2D.Impulse);
         }
         public void SetCurrentDirection(Vector2 newDirection)
         {
@@ -75,6 +82,8 @@ namespace Gameplay.Main
         public void SetDead()
         {
             IsDead = true;
+            SetCurrentDirection(Vector2.zero);
+            SetCurrentForce(0);
             Destroy(gameObject, 3f);
         }
 
@@ -84,5 +93,9 @@ namespace Gameplay.Main
             Gizmos.DrawRay(transform.position, CurrentDirection * 10);
         }
 
+        public Vector2 GetCurrentDirection()
+        {
+            return CurrentDirection;
+        }
     }
 }

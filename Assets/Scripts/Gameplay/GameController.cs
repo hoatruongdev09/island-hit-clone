@@ -39,7 +39,9 @@ namespace Gameplay.Main
         private GameAPI.OnScoreChange onScoreChange;
         private void Awake()
         {
+#if !UNITY_EDITOR
             Application.targetFrameRate = 60;
+#endif
             LoadGameScript();
             RegisterListeners();
         }
@@ -169,8 +171,8 @@ namespace Gameplay.Main
         }
         public Vector2 RandomDirection()
         {
-            var x = Random.Range(-1f, 1f);
-            var y = Random.Range(-1f, 1f);
+            var x = Random.Range(-0.5f, 0.5f);
+            var y = Random.Range(0.5f, 1f) * Mathf.Sign(Random.Range(-1, 1));
             return new Vector2(x, y);
         }
 

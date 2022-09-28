@@ -14,12 +14,18 @@ namespace Gameplay.Main
         public UnityEvent<Collision2D> OnCollision { get => onCollision; }
 
         [SerializeField] private UnityEvent<Collision2D> onCollision = new UnityEvent<Collision2D>();
+        private GameObject lastCollideObject = null;
 
-        private void OnCollisionEnter2D(Collision2D other)
+        // private void OnCollisionEnter2D(Collision2D other)
+        // {
+        //     if (!acceptedTag.Contains(other.gameObject.tag)) { return; }
+        //     OnCollision?.Invoke(other);
+        //     var contact = other.GetContact(0).point;
+        // }
+        private void OnCollisionStay2D(Collision2D other)
         {
             if (!acceptedTag.Contains(other.gameObject.tag)) { return; }
             OnCollision?.Invoke(other);
         }
-
     }
 }

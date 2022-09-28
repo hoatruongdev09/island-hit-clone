@@ -57,15 +57,17 @@ namespace Gameplay.Main
             {
                 bonusDirect = handleBar.GetHorizontalForce();
             }
-            var currentDirection = ball.CurrentDirection;
-            Vector2 newDirection = new Vector2();
-            foreach (var contact in collision.contacts)
-            {
-                var normal = contact.normal;
-                newDirection += Vector2.Reflect(currentDirection, normal);
+            var currentDirection = ball.GetCurrentDirection();
+            var contact = collision.GetContact(0).point;
+            // var inDirection = new Vector2(contact.x - ball.Position.x, contact.y - ball.Position.y);
+            var normal = collision.GetContact(0).normal;
+            var newDirection = Vector2.Reflect(currentDirection, normal);
+            var finalDirection = (newDirection + new Vector2(bonusDirect, 0)).normalized;
 
-            }
-            ball.SetCurrentDirection((newDirection / collision.contactCount + new Vector2(bonusDirect, 0)).normalized);
+            var inAngle = Vector2.Angle(currentDirection, normal);
+            if (inAngle < 90f) { return; }
+
+            ball.SetCurrentDirection(finalDirection);
         }
 
         public bool IsGameOver()

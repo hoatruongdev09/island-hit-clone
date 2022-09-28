@@ -6,6 +6,7 @@ namespace Gameplay.Core
     {
         bool IsDead { get; }
         float CurrentForce { get; }
+        Vector3 Position { get; }
         Vector2 CurrentDirection { get; }
         IColliderDetector ColliderDetector { get; }
 
@@ -13,7 +14,8 @@ namespace Gameplay.Core
         void SetCurrentDirection(Vector2 newDirection);
         void SetDead();
         void Move();
-
+        void ForceBall(Vector2 force);
+        Vector2 GetCurrentDirection();
         void OnCollisionWith(Collision2D other);
     }
 }
