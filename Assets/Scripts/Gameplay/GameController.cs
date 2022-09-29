@@ -5,7 +5,7 @@ using deVoid.Utils;
 using System;
 using Random = UnityEngine.Random;
 using System.Collections;
-
+using MoreMountains.NiceVibrations;
 namespace Gameplay.Main
 {
     public class GameController : MonoBehaviour, IGameController
@@ -48,7 +48,9 @@ namespace Gameplay.Main
         private void Start()
         {
             onScoreChange = Signals.Get<GameAPI.OnScoreChange>();
+            LoadAccountData();
         }
+
         private void OnDestroy()
         {
             RemoveListeners();
@@ -60,6 +62,8 @@ namespace Gameplay.Main
             Signals.Get<GameAPI.OnBallHitBottomEdge>().AddListener(OnBallHitBottomEdge);
             Signals.Get<GameAPI.OnBallHitDynamicIsland>().AddListener(OnBallHitDynamicIsland);
             Signals.Get<GameAPI.OnBallHitEdge>().AddListener(OnBallHitEdge);
+            Signals.Get<GameAPI.OnChangeUseHaptic>().AddListener(OnChangeUseHaptic);
+            Signals.Get<GameAPI.OnChangeUseSfx>().AddListener(OnChangeUseSfx);
         }
         private void RemoveListeners()
         {
@@ -68,7 +72,10 @@ namespace Gameplay.Main
             Signals.Get<GameAPI.OnBallHitBottomEdge>().RemoveListener(OnBallHitBottomEdge);
             Signals.Get<GameAPI.OnBallHitDynamicIsland>().RemoveListener(OnBallHitDynamicIsland);
             Signals.Get<GameAPI.OnBallHitEdge>().RemoveListener(OnBallHitEdge);
+            Signals.Get<GameAPI.OnChangeUseHaptic>().RemoveListener(OnChangeUseHaptic);
+            Signals.Get<GameAPI.OnChangeUseSfx>().RemoveListener(OnChangeUseSfx);
         }
+
 
         private void OnReplay()
         {
@@ -119,19 +126,22 @@ namespace Gameplay.Main
         private void OnBallHitEdge(IBall ball, Collision2D collision)
         {
             GameScript.OnBallHitEdge(ball, collision);
+            Vibrate(HapticTypes.SoftImpact);
         }
 
         private void OnBallHitDynamicIsland(IBall ball)
         {
             GameScript.OnBallHitDynamicIsland(ball);
+            Vibrate(HapticTypes.Success);
         }
 
         private void OnBallHitBottomEdge(IBall ball)
         {
             GameScript.OnBallHitBottomEdge(ball);
-
+            Vibrate(HapticTypes.Warning);
             if (GameScript.IsGameOver())
             {
+                Vibrate(HapticTypes.Failure);
                 EndGame();
             }
         }
@@ -159,6 +169,7 @@ namespace Gameplay.Main
             {
                 AccountData.isBestScore = true;
                 AccountData.bestGameScore = Score;
+                SaveAccountData();
             }
             else
             {
@@ -201,6 +212,19 @@ namespace Gameplay.Main
             return forcePerStep;
         }
 
+        private void LoadAccountData()
+        {
+            AccountData.bestGameScore = (uint)PlayerPrefs.GetInt(AccountData.BEST_SCORE_KEY, 0);
+            AccountData.useHaptic = PlayerPrefs.GetInt(AccountData.USE_HAPTIC, 1) == 1;
+            AccountData.useSfx = PlayerPrefs.GetInt(AccountData.USE_SFX, 1) == 1;
+        }
+        private void SaveAccountData()
+        {
+            PlayerPrefs.SetInt(AccountData.BEST_SCORE_KEY, (int)AccountData.bestGameScore);
+            PlayerPrefs.SetInt(AccountData.USE_HAPTIC, AccountData.useHaptic ? 1 : 0);
+            PlayerPrefs.SetInt(AccountData.USE_SFX, AccountData.useSfx ? 1 : 0);
+        }
+
         public void ResetGame()
         {
             SetScore(0);
@@ -208,5 +232,25 @@ namespace Gameplay.Main
             SetBallsForce(startBallForce);
             AliveBalls.Clear();
         }
+
+
+        private void OnChangeUseSfx(bool obj)
+        {
+            SaveAccountData();
+        }
+
+        private void OnChangeUseHaptic(bool obj)
+        {
+            SaveAccountData();
+        }
+
+        private void Vibrate(HapticTypes type)
+        {
+            if (AccountData.useHaptic)
+            {
+                MMVibrationManager.Haptic(type);
+            }
+        }
     }
+
 }

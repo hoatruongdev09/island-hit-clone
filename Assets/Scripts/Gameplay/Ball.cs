@@ -12,7 +12,8 @@ namespace Gameplay.Main
         [field: SerializeField] public float CurrentForce { get; private set; }
 
         [field: SerializeField] public Vector2 CurrentDirection { get; private set; }
-
+        [SerializeField] private GameObject dieEffect;
+        [SerializeField] private GameObject graphic;
         public IColliderDetector ColliderDetector => colliderDetector;
 
         public Vector3 Position => transform.position;
@@ -95,6 +96,8 @@ namespace Gameplay.Main
             IsDead = true;
             SetCurrentDirection(Vector2.zero);
             SetCurrentForce(0);
+            dieEffect.gameObject.SetActive(true);
+            graphic.gameObject.SetActive(false);
             Destroy(gameObject, 3f);
         }
 

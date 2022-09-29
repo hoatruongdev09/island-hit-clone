@@ -14,4 +14,10 @@ public class GameAPI
     public class OnStartPlay : ASignal { }
     public class OnReplay : ASignal { }
     public class OnGameEnd : ASignal { }
+    public class OnGoToMenu : ASignal { }
+
+    public class MenuToGameOver : ASignal { }
+
+    public class OnChangeUseSfx : ASignal<bool> { }
+    public class OnChangeUseHaptic : ASignal<bool> { }
 }
