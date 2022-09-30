@@ -175,6 +175,7 @@ namespace Gameplay.Main
             {
                 AccountData.isBestScore = false;
             }
+            AdServerController.Instance?.ShowInterstitialAd();
             DG.Tweening.DOVirtual.DelayedCall(1, () =>
             {
                 Signals.Get<GameAPI.OnGameEnd>().Dispatch();

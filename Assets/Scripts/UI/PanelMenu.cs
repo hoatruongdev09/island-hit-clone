@@ -133,8 +133,8 @@ public class PanelMenu : BasePanel
         {
 
         });
-        hiddenSettingsGroup.gameObject.SetActive(true);
-        hiddenSettingsGroup.DOFade(1, .3f).SetDelay(0.1f);
+        // hiddenSettingsGroup.gameObject.SetActive(true);
+        // hiddenSettingsGroup.DOFade(1, .3f).SetDelay(0.1f);
     }
 
     private void OnRemoveAdsClicked()
@@ -171,10 +171,10 @@ public class PanelMenu : BasePanel
             {
 
             });
-            hiddenSettingsGroup.DOFade(0, .1f).OnComplete(() =>
-            {
-                hiddenSettingsGroup.gameObject.SetActive(false);
-            });
+            // hiddenSettingsGroup.DOFade(0, .1f).OnComplete(() =>
+            // {
+            //     hiddenSettingsGroup.gameObject.SetActive(false);
+            // });
         }
         else
         {
