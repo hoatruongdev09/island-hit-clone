@@ -175,6 +175,7 @@ namespace Gameplay.Main
             {
                 AccountData.isBestScore = false;
             }
+            SfxManager.Instance.PlaySfx(SfxManager.SfxName.FailHit);
             AdServerController.Instance?.ShowInterstitialAd();
             DG.Tweening.DOVirtual.DelayedCall(1, () =>
             {
@@ -249,7 +250,14 @@ namespace Gameplay.Main
         {
             if (AccountData.useHaptic)
             {
-                MMVibrationManager.Haptic(type);
+                if (MMVibrationManager.HapticsSupported())
+                {
+                    MMVibrationManager.Haptic(type);
+                }
+                else
+                {
+                    MMVibrationManager.Vibrate();
+                }
             }
         }
     }

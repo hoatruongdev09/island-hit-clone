@@ -64,6 +64,15 @@ namespace Gameplay.Main
             if (other.gameObject.CompareTag("DynamicIsland"))
             {
                 onBallHitDynamicIsland.Dispatch(this);
+                SfxManager.Instance.PlaySfx(SfxManager.SfxName.IslandHit);
+            }
+            else if (other.gameObject.CompareTag("ScreenEdge"))
+            {
+                SfxManager.Instance.PlaySfx(SfxManager.SfxName.WallHit);
+            }
+            else if (other.gameObject.CompareTag("HandleBar"))
+            {
+                SfxManager.Instance.PlaySfx(SfxManager.SfxName.WallHit);
             }
             else
             {
