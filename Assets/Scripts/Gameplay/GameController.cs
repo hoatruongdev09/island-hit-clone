@@ -170,6 +170,12 @@ namespace Gameplay.Main
                 AccountData.isBestScore = true;
                 AccountData.bestGameScore = Score;
                 SaveAccountData();
+#if UNITY_ANDROID
+                GGGameServices.Instance.PostScoreToHighestScore((int)Score, (success) =>
+                {
+                    Debug.Log($"post score success");
+                });
+#endif
             }
             else
             {

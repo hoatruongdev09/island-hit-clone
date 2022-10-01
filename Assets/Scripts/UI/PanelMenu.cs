@@ -93,6 +93,12 @@ public class PanelMenu : BasePanel
             });
             return;
         }
+        else
+        {
+#if UNITY_ANDROID
+            GGGameServices.Instance.ShowHighestLeaderboard();
+#endif
+        }
     }
 
     private void OnSettingsClicked()

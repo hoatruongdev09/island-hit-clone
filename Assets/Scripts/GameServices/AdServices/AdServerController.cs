@@ -32,6 +32,7 @@ public class AdServerController : MonoBehaviour
 
     public void ShowInterstitialAd()
     {
+        if (interstitial == null) { return; }
         if (!interstitial.IsLoaded())
         {
             LoadInterstitialAd();
