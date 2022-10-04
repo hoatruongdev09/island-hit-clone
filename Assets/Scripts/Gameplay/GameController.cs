@@ -171,10 +171,9 @@ namespace Gameplay.Main
                 AccountData.bestGameScore = Score;
                 SaveAccountData();
 #if UNITY_ANDROID
-                GGGameServices.Instance.PostScoreToHighestScore((int)Score, (success) =>
-                {
-                    Debug.Log($"post score success");
-                });
+                GGGameServices.Instance.PostScoreToHighestScore((int)Score, OnPostScoreDone);
+#elif UNITY_IOS || UNITY_IPHONE
+                GameCenterServices.Instance.PostScoreToHighestScore((int)Score, OnPostScoreDone);
 #endif
             }
             else
@@ -188,6 +187,12 @@ namespace Gameplay.Main
                 Signals.Get<GameAPI.OnGameEnd>().Dispatch();
             });
         }
+
+        private void OnPostScoreDone(bool success)
+        {
+            Debug.Log($"post score success: {success}");
+        }
+
         public Vector2 RandomDirection()
         {
             var x = Random.Range(-0.5f, 0.5f);

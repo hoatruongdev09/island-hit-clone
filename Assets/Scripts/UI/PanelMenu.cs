@@ -97,6 +97,8 @@ public class PanelMenu : BasePanel
         {
 #if UNITY_ANDROID
             GGGameServices.Instance.ShowHighestLeaderboard();
+#elif UNITY_IOS || UNITY_IPHONE
+            GameCenterServices.Instance.ShowHighestLeaderboard();
 #endif
         }
     }
